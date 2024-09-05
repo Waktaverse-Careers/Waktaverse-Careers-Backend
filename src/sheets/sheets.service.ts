@@ -29,6 +29,23 @@ export class SheetsService {
       range: '크레딧!A2:E',
     });
     const { data, status } = this.context;
-    return { data, status };
+    return { data: this.changeData(data.values), status };
+  }
+
+  changeData(data: string[][]) {
+    const result = [];
+
+    data.map((row: string[]) => {
+      const arr = row[4].split(', ');
+      const json = {
+        type: row[0],
+        team: row[1],
+        keyword: row[2],
+        description: row[3],
+        people: arr,
+      };
+      result.push(json);
+    });
+    return result;
   }
 }

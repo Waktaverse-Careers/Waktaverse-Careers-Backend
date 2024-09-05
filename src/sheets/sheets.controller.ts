@@ -8,7 +8,7 @@ export class SheetsController {
   @Get()
   async getSheet() {
     const { data, status } = await this.sheets.getSheet();
-    if (status === 200) return data.values;
+    if (status === 200) return data;
     return 'fail';
   }
 }
