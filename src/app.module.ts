@@ -4,12 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SheetsModule } from './sheets/sheets.module';
 
 @Module({
   // from .env File
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), 
-    
+    ConfigModule.forRoot({ isGlobal: true }),
+
     // TypeORM
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,6 +28,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
 
     AuthModule,
+
+    SheetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
