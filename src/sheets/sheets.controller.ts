@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { BadRequestException, Controller, Get } from '@nestjs/common';
 import { SheetsService } from './sheets.service';
 
 @Controller('sheets')
@@ -9,6 +9,6 @@ export class SheetsController {
   async getSheet() {
     const { data, status } = await this.sheets.getSheet();
     if (status === 200) return data;
-    return 'fail';
+    throw new BadRequestException();
   }
 }
