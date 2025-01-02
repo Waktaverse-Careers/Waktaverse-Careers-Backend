@@ -19,10 +19,10 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Waktaverse Carrer')
+    .setTitle('Waktaverse Carrers')
     .setDescription('The API description')
     .setVersion('1.0')
-    .addTag('Waktaverse-Carrer')
+    .addTag('Waktaverse-Carrers')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
