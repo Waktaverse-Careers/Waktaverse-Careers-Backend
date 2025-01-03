@@ -2,7 +2,7 @@
   "name": "Waktaverse-Carrer-Backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "iqeq1945 <iqeq1945@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -31,11 +31,13 @@
     "@types/passport-naver": "^1.0.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "googleapis": "^144.0.0",
     "mysql": "^2.18.1",
     "passport-naver": "^1.0.6",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -76,5 +78,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Waktaverse-carrer/Waktaverse-Carrer-Backend.git"
 }

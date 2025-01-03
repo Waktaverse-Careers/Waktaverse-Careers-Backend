@@ -9,14 +9,11 @@ export class AuthController {
 
   @UseGuards(NaverAuthGuard)
   @Get('naver')
-  async login() {
-    return;
-  }
+  async login() {}
 
   @UseGuards(NaverAuthGuard)
   @Get('callback')
   async callback(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
     res.send(req.user);
   }
 }
