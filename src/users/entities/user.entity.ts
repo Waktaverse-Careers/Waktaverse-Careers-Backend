@@ -60,6 +60,14 @@ export class User {
   })
   role: UserRoleType;
 
+  @Column({
+    name: 'REFRESH_TOKEN',
+    nullable: true,
+    comment: 'refresh token',
+    select: false,
+  })
+  refresh_token: string;
+
   updateVisitedAt() {
     this.visited_at = new Date();
   }
