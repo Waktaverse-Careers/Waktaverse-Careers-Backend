@@ -1,5 +1,5 @@
 {
-  "name": "Waktaverse-Carrer-Backend",
+  "name": "Waktaverse-Carrers-Backend",
   "version": "0.0.1",
   "description": "",
   "author": "iqeq1945 <iqeq1945@gmail.com>",
@@ -33,6 +33,7 @@
     "class-validator": "^0.14.1",
     "googleapis": "^144.0.0",
     "mysql": "^2.18.1",
+    "passport": "^0.7.0",
     "passport-naver": "^1.0.6",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",

@@ -21,7 +21,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts}'],
+        entities: [__dirname + '/**/*.entity.{js,ts}'],
         synchronize: true,
       }),
       inject: [ConfigService],

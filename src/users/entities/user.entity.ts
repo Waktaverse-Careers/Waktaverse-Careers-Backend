@@ -13,11 +13,8 @@ export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'ID', comment: '계정 고유 ID' })
   id: string;
 
-  @Column({ name: 'USER_ID', nullable: false, comment: '닉네임' })
+  @Column({ name: 'USER_ID', nullable: false, comment: '계정 ID' })
   userId: string;
-
-  @Column({ name: 'USER_PASSWORD', nullable: false, comment: '비밀번호' })
-  password: string;
 
   @Column({
     name: 'USER_NICKNAME',
@@ -27,6 +24,16 @@ export class User {
   })
   nickname: string;
 
+  @Column({
+    name: 'USER_EXTRANAME',
+    nullable: true,
+    comment: '추가 닉네임',
+  })
+  extra_name: string;
+
+  @Column({ name: 'PROFILE_IMG', nullable: true, comment: '프로필 이미지 url' })
+  profile_img: string;
+
   @CreateDateColumn({ name: 'CREATED_AT', comment: '생성 시간' })
   created_at: Date;
 
@@ -35,6 +42,14 @@ export class User {
 
   @Column({ name: 'VISITED_AT', nullable: true, comment: '방문 시간' })
   visited_at: Date;
+
+  @Column({
+    name: 'PROVIDER',
+    nullable: false,
+    default: '',
+    comment: 'oauth2 provider',
+  })
+  provider: string;
 
   @Column({
     name: 'USER_ROLE',
@@ -50,8 +65,7 @@ export class User {
   }
 
   toResponseObject() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...data } = this;
+    const { id, ...data } = this;
     return data;
   }
 }

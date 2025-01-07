@@ -12,7 +12,7 @@ export class AuthController {
   async login() {}
 
   @UseGuards(NaverAuthGuard)
-  @Get('callback')
+  @Get('naver/callback')
   async callback(@Req() req: Request, @Res() res: Response) {
     res.send(req.user);
   }
