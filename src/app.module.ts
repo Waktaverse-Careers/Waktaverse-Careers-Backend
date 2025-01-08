@@ -23,6 +23,24 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
         database: configService.get<string>('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
         synchronize: true,
+        logging: true,
+        autoLoadEntities: true,
+        connectTimeout: 10000, // 연결 타임아웃 10초
+        acquireTimeout: 10000, // 커넥션 획득 타임아웃 10초
+        extra: {
+          connectionLimit: 10, // 동시 연결 제한
+        },
+        poolSize: 10, // 커넥션 풀 크기
+        pool: {
+          min: 0,
+          max: 10,
+        },
+        // 쿼리 타임아웃 설정
+        options: {
+          enableArithAbort: true,
+          trustServerCertificate: true,
+          requestTimeout: 30000, // 쿼리 타임아웃 30초
+        },
       }),
       inject: [ConfigService],
     }),

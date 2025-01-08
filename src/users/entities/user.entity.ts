@@ -62,9 +62,9 @@ export class User {
 
   @Column({
     name: 'REFRESH_TOKEN',
+    type: 'text',
     nullable: true,
     comment: 'refresh token',
-    select: false,
   })
   refresh_token: string;
 
@@ -72,8 +72,13 @@ export class User {
     this.visited_at = new Date();
   }
 
+  updateRefreshToken(refreshToken: string) {
+    this.refresh_token = refreshToken;
+    this.updateVisitedAt();
+  }
+
   toResponseObject() {
-    const { id, ...data } = this;
+    const { refresh_token, ...data } = this;
     return data;
   }
 }
