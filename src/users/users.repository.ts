@@ -10,10 +10,10 @@ export class UserRepository {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
-  async findById(id: string): Promise<User | undefined> {
+  async findById(id: number, option?: any): Promise<User | undefined> {
     this.logger.log(`findById called with id: ${id}`);
     try {
-      const user = await this.repo.findOne({ where: { id } });
+      const user = await this.repo.findOne({ where: { id }, ...option });
       this.logger.log(`findById result: ${user}`);
       return user;
     } catch (error) {
@@ -22,10 +22,10 @@ export class UserRepository {
     }
   }
 
-  async findByUserId(userId: string): Promise<User | undefined> {
+  async findByUserId(userId: string, option?: any): Promise<User | undefined> {
     this.logger.log(`findByUserId called with userId: ${userId}`);
     try {
-      const user = await this.repo.findOne({ where: { userId } });
+      const user = await this.repo.findOne({ where: { userId }, ...option });
       this.logger.log(`findByUserId result: ${user}`);
       return user;
     } catch (error) {
@@ -50,7 +50,7 @@ export class UserRepository {
   }
 
   async updateUser(
-    id: string,
+    id: number,
     updateData: Partial<User>,
   ): Promise<User | undefined> {
     this.logger.log(
@@ -70,10 +70,10 @@ export class UserRepository {
     }
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: number): Promise<void> {
     this.logger.log(`deleteUser called with id: ${id}`);
     try {
-      await this.repo.delete({ id });
+      await this.repo.update(id, { role: 'delete' });
       this.logger.log(`deleteUser completed for id: ${id}`);
     } catch (error) {
       this.logger.error(`Error in deleteUser with id: ${id}`, error);

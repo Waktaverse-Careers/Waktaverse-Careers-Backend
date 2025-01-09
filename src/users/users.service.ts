@@ -1,4 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { UserRepository } from './users.repository';
+import { Logger } from '@nestjs/common';
+import { ProfileData } from './dto/update-profile.dto';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+  constructor(private readonly userRepo: UserRepository) {}
+
+  async getById(id: number) {
+    const user = await this.userRepo.findById(id);
+    if (!user) throw new BadRequestException();
+    return user;
+  }
+
+  async updateProfile(id: number, profile: ProfileData) {
+    await this.userRepo.update(id, { profile });
+  }
+
+  async deleteUser(id: number) {
+    await this.userRepo.deleteUser(id);
+  }
+}
