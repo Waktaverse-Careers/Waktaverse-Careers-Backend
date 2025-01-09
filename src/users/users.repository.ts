@@ -10,7 +10,7 @@ export class UserRepository {
     @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
-  async findById(id: string, option?: any): Promise<User | undefined> {
+  async findById(id: number, option?: any): Promise<User | undefined> {
     this.logger.log(`findById called with id: ${id}`);
     try {
       const user = await this.repo.findOne({ where: { id }, ...option });
@@ -50,7 +50,7 @@ export class UserRepository {
   }
 
   async updateUser(
-    id: string,
+    id: number,
     updateData: Partial<User>,
   ): Promise<User | undefined> {
     this.logger.log(
@@ -70,10 +70,10 @@ export class UserRepository {
     }
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: number): Promise<void> {
     this.logger.log(`deleteUser called with id: ${id}`);
     try {
-      await this.repo.delete({ id });
+      await this.repo.update(id, { role: 'delete' });
       this.logger.log(`deleteUser completed for id: ${id}`);
     } catch (error) {
       this.logger.error(`Error in deleteUser with id: ${id}`, error);

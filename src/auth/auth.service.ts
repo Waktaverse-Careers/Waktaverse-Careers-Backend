@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -13,6 +14,8 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
@@ -21,8 +24,6 @@ export class AuthService {
   ) {}
 
   async signIn(dto: OauthUserDto) {
-    const JWT_SECRET = this.config.get<string>('JWT_SECRET');
-    const JWT_REFRESH_SECRET = this.config.get<string>('JWT_REFRESH_SECRET');
     try {
       let user = await this.userRepo.findOne({
         select: { id: true },
@@ -31,24 +32,10 @@ export class AuthService {
 
       if (!user) {
         user = await this.signUp({ ...dto });
+        this.logger.log(
+          `SignUp User : ${user.id} | ${user.userId} |${user.nickname}`,
+        );
       }
-
-      // JWT 토큰 생성
-      const payload = {
-        sub: user.id,
-        userId: user.userId,
-      };
-
-      const accessToken = this.jwtService.sign(payload, {
-        secret: JWT_SECRET,
-        expiresIn: '1h',
-      });
-
-      const refreshToken = this.jwtService.sign(payload, {
-        secret: JWT_REFRESH_SECRET,
-        expiresIn: '7d',
-      });
-
       return await this.updateLoginToken(user.id);
     } catch (err) {
       throw new BadRequestException();
@@ -59,7 +46,7 @@ export class AuthService {
     return await this.userRepo.save(dto);
   }
 
-  async updateLoginToken(id: string) {
+  async updateLoginToken(id: number) {
     const JWT_SECRET = this.config.get<string>('JWT_SECRET');
     const JWT_REFRESH_SECRET = this.config.get<string>('JWT_REFRESH_SECRET');
 
@@ -85,12 +72,19 @@ export class AuthService {
       expiresIn: '7d',
     });
 
+    this.logger.log(
+      `Set Token : ${user.id} | ${user.userId} |${user.nickname}`,
+    );
     await this.updateRefresh(user.id, refreshToken);
+
+    this.logger.log(
+      `SignIn User : ${user.id} | ${user.userId} | ${user.nickname}`,
+    );
 
     return { user: user.toResponseObject(), accessToken, refreshToken };
   }
 
-  async updateRefresh(id: string, refreshToken: string) {
+  async updateRefresh(id: number, refreshToken: string) {
     await this.userRepo.update(id, {
       refresh_token: refreshToken,
       visited_at: new Date(),
@@ -112,12 +106,10 @@ export class AuthService {
         },
       });
 
-      // 3. 유저가 없거나 토큰이 일치하지 않는 경우
       if (!user || user.refresh_token !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      // 4. 새로운 토큰 생성
       const payload = {
         sub: user.id,
         userId: user.userId,
@@ -136,7 +128,6 @@ export class AuthService {
       await this.updateRefresh(user.id, newRefreshToken);
 
       return {
-        user: user.toResponseObject(),
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       };

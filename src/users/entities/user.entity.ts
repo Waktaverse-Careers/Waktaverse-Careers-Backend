@@ -5,13 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProfileData } from '../dto/update-profile.dto';
 
-export type UserRoleType = 'admin' | 'user' | 'ban';
+export type UserRoleType = 'admin' | 'actice' | 'unactive' | 'ban' | 'delete';
 
 @Entity({ name: 'wc_user' })
 export class User {
-  @PrimaryGeneratedColumn('uuid', { name: 'ID', comment: '계정 고유 ID' })
-  id: string;
+  @PrimaryGeneratedColumn('increment', { name: 'ID', comment: '계정 고유 ID' })
+  id: number;
 
   @Column({ name: 'USER_ID', nullable: false, comment: '계정 ID' })
   userId: string;
@@ -54,8 +55,8 @@ export class User {
   @Column({
     name: 'USER_ROLE',
     type: 'enum',
-    enum: ['admin', 'user', 'ban'],
-    default: 'user',
+    enum: ['admin', 'active', 'unactive', 'ban', 'delete'],
+    default: 'unactive',
     comment: '역할',
   })
   role: UserRoleType;
@@ -67,6 +68,13 @@ export class User {
     comment: 'refresh token',
   })
   refresh_token: string;
+
+  @Column({
+    name: 'Profile',
+    type: 'json',
+    comment: 'Profile Info',
+  })
+  profile: ProfileData = {};
 
   updateVisitedAt() {
     this.visited_at = new Date();
