@@ -72,9 +72,10 @@ export class User {
   @Column({
     name: 'Profile',
     type: 'json',
+    nullable: true,
     comment: 'Profile Info',
   })
-  profile: ProfileData = {};
+  profile?: ProfileData;
 
   updateVisitedAt() {
     this.visited_at = new Date();
