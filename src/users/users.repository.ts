@@ -37,7 +37,9 @@ export class UserRepository {
   async createUser(userData: Partial<User>): Promise<User> {
     this.logger.log(`createUser called with data: ${JSON.stringify(userData)}`);
     try {
-      const savedUser = await this.repo.save(this.repo.create(userData));
+      const user = this.repo.create(userData);
+      user.updateVisitedAt();
+      const savedUser = await this.repo.save(user);
       this.logger.log(`createUser result: ${savedUser}`);
       return savedUser;
     } catch (error) {
