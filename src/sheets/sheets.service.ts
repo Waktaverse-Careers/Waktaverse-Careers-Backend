@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { client_email, private_key } from '../../credentials.json';
 import { google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
+import { SaveTeamDto } from 'src/teams/dto/save-team.dto';
+import { PeopleData, TeamType } from 'src/teams/entities/team.entity';
 
 @Injectable()
 export class SheetsService {
@@ -26,36 +28,37 @@ export class SheetsService {
   async getSheet() {
     this.context = await this.googleSheet.spreadsheets.values.get({
       spreadsheetId: this.SHEET_ID,
-      range: '(최종) 정보 등록용 시트!B2:I',
+      range: '(최종) 정보 등록용 시트!A2:I',
     });
     const { data, status } = this.context;
     return { data: this.changeData(data.values), status };
   }
 
-  changeData(data: string[][]) {
+  changeData(data: string[][]): SaveTeamDto[] {
     const result = [];
 
     data.map((row: string[]) => {
-      const arr = row[5].split(', ');
+      const arr = row[6].split(', ');
       const mul = arr.map((item) => {
         return item.split('|');
       });
       const data = mul.map((people) => {
         return {
           name: people[0],
-          jobs: people[1] ? people[1].split('^') : '',
+          role: people[1] ? people[1].split('^') : [],
         };
       });
 
-      const json = {
-        type: row[0],
-        team: row[1],
-        keyword: row[2].split(', '),
-        date: row[3],
-        description: row[4],
+      const json: SaveTeamDto = {
+        visible: row[0] === '검수 완료',
+        type: row[1] as TeamType,
+        name: row[2],
+        keyword: JSON.stringify(row[3].split(', ')),
+        date: row[4],
+        slogan: row[5],
         people: data,
-        feedback_url: row[6].split(','),
-        ref_url: row[7].split(','),
+        review_url: JSON.stringify(row[7].split(',')),
+        reference_url: JSON.stringify(row[8].split(',')),
       };
       result.push(json);
     });

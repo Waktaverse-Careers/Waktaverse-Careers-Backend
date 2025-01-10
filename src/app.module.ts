@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { TeamsModule } from './teams/teams.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
     AuthModule,
     SheetsModule,
     UsersModule,
+    TeamsModule,
   ],
   controllers: [AppController],
   providers: [
