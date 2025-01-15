@@ -27,6 +27,7 @@ export class OauthUserDto {
   provider: string;
 
   @ApiProperty({
+    type: 'text',
     example: 'https://...',
     description: 'profile img url 주소',
     required: true,
