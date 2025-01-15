@@ -19,7 +19,6 @@ export class User {
 
   @Column({
     name: 'USER_NICKNAME',
-    length: 8,
     nullable: false,
     comment: '닉네임',
   })
@@ -32,7 +31,12 @@ export class User {
   })
   extra_name: string;
 
-  @Column({ name: 'PROFILE_IMG', nullable: true, comment: '프로필 이미지 url' })
+  @Column({
+    name: 'PROFILE_IMG',
+    nullable: true,
+    comment: '프로필 이미지 url',
+    type: 'text',
+  })
   profile_img: string;
 
   @CreateDateColumn({ name: 'CREATED_AT', comment: '생성 시간' })

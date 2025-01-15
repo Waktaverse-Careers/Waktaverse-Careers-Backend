@@ -5,6 +5,7 @@ import { NaverStrategy } from './naver.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, NaverStrategy],
+  providers: [AuthService, NaverStrategy, GoogleStrategy],
 })
 export class AuthModule {}
