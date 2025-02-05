@@ -28,7 +28,7 @@ export class SheetsService {
   async getSheet() {
     this.context = await this.googleSheet.spreadsheets.values.get({
       spreadsheetId: this.SHEET_ID,
-      range: '(최종) 정보 등록용 시트!A2:I',
+      range: '(최종) 정보 등록용 시트!A2:J',
     });
     const { data, status } = this.context;
     return { data: this.changeData(data.values), status };
@@ -38,7 +38,7 @@ export class SheetsService {
     const result = [];
 
     data.map((row: string[]) => {
-      const arr = row[6].split(', ');
+      const arr = row[7].split(', ');
       const mul = arr.map((item) => {
         return item.split('|');
       });
@@ -50,15 +50,16 @@ export class SheetsService {
       });
 
       const json: SaveTeamDto = {
+        id: row[2],
         visible: row[0] === '검수 완료',
         type: row[1] as TeamType,
-        name: row[2],
-        keyword: JSON.stringify(row[3].split(', ')),
-        date: row[4],
-        slogan: row[5],
+        name: row[3],
+        keyword: JSON.stringify(row[4].split(', ')),
+        date: row[5],
+        slogan: row[6],
         people: data,
-        review_url: JSON.stringify(row[7].split(',')),
-        reference_url: JSON.stringify(row[8].split(',')),
+        review_url: JSON.stringify(row[8].split(',')),
+        reference_url: JSON.stringify(row[9].split(',')),
       };
       result.push(json);
     });

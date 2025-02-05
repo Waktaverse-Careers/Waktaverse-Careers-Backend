@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 export interface PeopleData {
   name: string;
@@ -17,8 +17,8 @@ export type TeamType =
 
 @Entity({ name: 'wc_team' })
 export class Team {
-  @PrimaryGeneratedColumn('increment', { name: 'TEAM_ID', comment: 'Team id' })
-  id: number;
+  @PrimaryColumn('varchar', { name: 'TEAM_ID', comment: 'Team id' }) // 타입과 설정을 변경
+  id: string;
 
   @Column({
     name: 'TEAM_TYPE',

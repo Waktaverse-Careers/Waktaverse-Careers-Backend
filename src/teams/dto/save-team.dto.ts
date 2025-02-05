@@ -10,6 +10,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class SaveTeamDto {
   @ApiProperty({
+    example: 'MU-12',
+    description: 'Team 의 고유 id',
+    required: true,
+  })
+  @IsString()
+  id: string;
+
+  @ApiProperty({
     example: true,
     description: '검수가 완료된 팀인지 확인',
     required: true,
