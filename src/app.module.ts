@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { TeamsModule } from './teams/teams.module';
+import { PortfoliosModule } from './portfolios/portfolios.module';
 import { R2Module } from './r2/r2.module';
 
 @Module({
@@ -49,6 +50,7 @@ import { R2Module } from './r2/r2.module';
     SheetsModule,
     UsersModule,
     TeamsModule,
+    PortfoliosModule,
     R2Module,
   ],
   controllers: [AppController],

@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { ProfileData } from '../dto/update-profile.dto';
+import { Portfolio } from '../../portfolios/entities/portfolio.entity';
 
 export type UserRoleType = 'admin' | 'actice' | 'unactive' | 'ban' | 'delete';
 
@@ -80,6 +82,9 @@ export class User {
     comment: 'Profile Info',
   })
   profile?: ProfileData;
+
+  @OneToOne(() => Portfolio, (portfolio) => portfolio.user)
+  portfolios: Portfolio[];
 
   updateVisitedAt() {
     this.visited_at = new Date();
