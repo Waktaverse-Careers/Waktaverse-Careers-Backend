@@ -53,18 +53,18 @@ export class PortfoliosService {
     user: User,
   ): Promise<Portfolio> {
     const portfolio = await this.getPortfolioById(id);
-    if (portfolio.user.id !== user.id) {
-      throw new UnauthorizedException('수정 권한이 없습니다.');
-    }
+    // if (portfolio.user.id !== user.id) {
+    //   throw new UnauthorizedException('수정 권한이 없습니다.');
+    // }
     Object.assign(portfolio, updatePortfolioDto);
     return this.portfolioRepository.save(portfolio);
   }
 
   async deletePortfolio(id: number, user: User): Promise<void> {
     const portfolio = await this.getPortfolioById(id);
-    if (portfolio.user.id !== user.id) {
-      throw new UnauthorizedException('삭제 권한이 없습니다.');
-    }
+    // if (portfolio.user.id !== user.id) {
+    //   throw new UnauthorizedException('삭제 권한이 없습니다.');
+    // }
     await this.portfolioRepository.remove(portfolio);
   }
 }
