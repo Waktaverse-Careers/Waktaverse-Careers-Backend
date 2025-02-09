@@ -30,17 +30,6 @@ export class Portfolio {
   @OneToMany(() => PortfolioTag, (tag) => tag.portfolio)
   tags: PortfolioTag[];
 
-  @OneToMany(() => Skill, (skill) => skill.portfolio, { cascade: true })
-  skills: Skill[];
-
-  @Column({
-    name: 'CONTACT',
-    type: 'varchar',
-    nullable: true,
-    comment: '연락처',
-  })
-  contact: string;
-
   @OneToMany(() => Work, (work) => work.portfolio, { cascade: true })
   works: Work[];
 
@@ -54,12 +43,12 @@ export class Portfolio {
   visibility: PortfolioVisibility;
 
   @Column({
-    name: 'THUMBNAIL_URL',
+    name: 'THUMBNAIL_ID',
     type: 'text',
     nullable: true,
-    comment: '포폴 썸네일 이미지 URL',
+    comment: '포폴 썸네일 이미지 ID',
   })
-  thumbnailUrl: string;
+  thumbnailId: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -82,23 +71,6 @@ export class PortfolioTag {
   portfolio: Portfolio;
 }
 
-@Entity('skills')
-export class Skill {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'SKILL_NAME', length: 50, comment: '스킬 이름' })
-  skillName: string;
-
-  @Column({ name: 'PERCENTAGE', type: 'int', default: 0, comment: '숙련도' })
-  percentage: number;
-
-  @ManyToOne(() => Portfolio, (portfolio) => portfolio.skills, {
-    onDelete: 'CASCADE',
-  })
-  portfolio: Portfolio;
-}
-
 @Entity('works')
 export class Work {
   @PrimaryGeneratedColumn()
@@ -111,12 +83,12 @@ export class Work {
   tags: string[];
 
   @Column({
-    name: 'IMAGE_URL',
+    name: 'IMAGE_ID',
     type: 'text',
     nullable: true,
-    comment: '작업물 썸네일 이미지 URL',
+    comment: '작업물 썸네일 이미지 ID',
   })
-  imageUrl: string;
+  imageId: string;
 
   @Column({ name: 'URL', type: 'text', comment: '작업물 URL' })
   url: string;

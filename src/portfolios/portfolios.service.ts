@@ -24,7 +24,6 @@ export class PortfoliosService {
     const portfolio = this.portfolioRepository.create({
       ...createPortfolioDto,
       user,
-      skills: createPortfolioDto.skills.map((skill) => ({ ...skill })),
       works: createPortfolioDto.works.map((work) => ({ ...work })),
       tags: createPortfolioDto.tags.map((tagName) => ({ name: tagName })),
     });
@@ -35,7 +34,7 @@ export class PortfoliosService {
     try {
       const portfolio = await this.portfolioRepository.findOne({
         where: { id },
-        relations: ['skills', 'works', 'tags', 'user'],
+        relations: ['works', 'tags', 'user'],
       });
 
       if (!portfolio) {

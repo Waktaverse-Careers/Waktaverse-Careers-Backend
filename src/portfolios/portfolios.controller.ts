@@ -33,8 +33,8 @@ export class PortfoliosController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'id로 포트폴리오 불러오기' })
-  @ApiParam({ name: 'id', description: '포트폴리오 id', example: 1 })
+  @ApiOperation({ summary: 'ID로 포트폴리오 불러오기' })
+  @ApiParam({ name: 'id', description: '포트폴리오 ID', example: 1 })
   getPortfolioById(@Param('id') id: number) {
     return this.portfolioService.getPortfolioById(id);
   }
@@ -42,7 +42,7 @@ export class PortfoliosController {
   @Patch(':id')
   //@UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '기존 포트폴리오 수정' })
-  @ApiParam({ name: 'id', description: '포트폴리오 id', example: 1 })
+  @ApiParam({ name: 'id', description: '포트폴리오 ID', example: 1 })
   @ApiBody({ type: UpdatePortfolioDto })
   updatePortfolio(
     @Param('id') id: number,
@@ -55,7 +55,7 @@ export class PortfoliosController {
   @Delete(':id')
   //@UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '포트폴리오 제거' })
-  @ApiParam({ name: 'id', description: '포트폴리오 id', example: 1 })
+  @ApiParam({ name: 'id', description: '포트폴리오 ID', example: 1 })
   deletePortfolio(@Param('id') id: number, @CurrentUser() user: User) {
     return this.portfolioService.deletePortfolio(id, user);
   }

@@ -3,22 +3,11 @@ import {
   IsArray,
   IsOptional,
   IsEnum,
-  IsInt,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { PortfolioVisibility } from '../entities/portfolio.entity';
-
-class CreateSkillDto {
-  @ApiProperty({ description: '스킬 이름', example: 'nest.js' })
-  @IsString()
-  skillName: string;
-
-  @ApiProperty({ description: '스킬 숙련도 (%)', example: 80 })
-  @IsInt()
-  percentage: number;
-}
 
 class CreateWorkDto {
   @ApiProperty({ description: '작업물 제목', example: '왁타버스 커리어즈' })
@@ -34,13 +23,13 @@ class CreateWorkDto {
   tags: string[];
 
   @ApiProperty({
-    description: '작업물 이미지 URL (포폴에 추가한 작업물의 썸네일)',
-    example: 'https://example.com/work.jpg',
+    description: '작업물 이미지 ID (포폴에 추가한 작업물의 썸네일)',
+    example: 'work.jpg',
     required: false,
   })
   @IsOptional()
   @IsString()
-  imageUrl?: string;
+  imageId?: string;
 
   @ApiProperty({
     description: '작업물 URL (ex: 왁물원 게시글 링크)',
@@ -75,17 +64,6 @@ export class CreatePortfolioDto {
   tags?: string[];
 
   @ApiProperty({
-    description: '스킬 목록',
-    type: [CreateSkillDto],
-    required: false,
-  })
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateSkillDto)
-  skills?: CreateSkillDto[];
-
-  @ApiProperty({
     description: '작업물 목록',
     type: [CreateWorkDto],
     required: false,
@@ -97,22 +75,13 @@ export class CreatePortfolioDto {
   works?: CreateWorkDto[];
 
   @ApiProperty({
-    description: '연락처',
-    example: 'email@naver.com',
+    description: '포트폴리오 썸네일 이미지 ID',
+    example: 'thumbnail.jpg',
     required: false,
   })
   @IsOptional()
   @IsString()
-  contact?: string;
-
-  @ApiProperty({
-    description: '포트폴리오 썸네일 이미지 주소',
-    example: 'https://example.com/thumbnail.jpg',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  thumbnailUrl?: string;
+  thumbnailId?: string;
 
   @ApiProperty({
     description: '공개 범위 선택',
