@@ -33,7 +33,7 @@ export class Portfolio {
   })
   description: string;
 
-  @ManyToMany(() => Tag, (tag) => tag.portfolio, { cascade: true })
+  @ManyToMany(() => Tag, (tag) => tag.portfolio)
   tags: Tag[];
 
   @Column({

@@ -84,7 +84,7 @@ export class User {
   profile?: ProfileData;
 
   @OneToOne(() => Portfolio, (portfolio) => portfolio.user)
-  portfolios: Portfolio[];
+  portfolios: Portfolio;
 
   updateVisitedAt() {
     this.visited_at = new Date();
