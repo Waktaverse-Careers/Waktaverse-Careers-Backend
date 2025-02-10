@@ -1,21 +1,14 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Portfolio } from './portfolio.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { PortfolioVersion } from './portfolio-version.entity';
 
-@Entity('tags')
+@Entity('tag')
 export class Tag {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'TAG_NAME', comment: '태그 이름' })
+  @Column({ name: 'NAME', length: 50, unique: true })
   name: string;
 
-  @ManyToMany(() => Portfolio, (portfolio) => portfolio.tags)
-  @JoinTable()
-  portfolio: Portfolio;
+  @ManyToMany(() => PortfolioVersion, (version) => version.tags)
+  versions: PortfolioVersion[];
 }
