@@ -31,7 +31,7 @@ export class User {
     nullable: true,
     comment: '추가 닉네임',
   })
-  extra_name: string;
+  extraName: string;
 
   @Column({
     name: 'PROFILE_IMG',
@@ -39,16 +39,16 @@ export class User {
     comment: '프로필 이미지 url',
     type: 'text',
   })
-  profile_img: string;
+  profileImg: string;
 
   @CreateDateColumn({ name: 'CREATED_AT', comment: '생성 시간' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'UPDATED_AT', comment: '수정 시간' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ name: 'VISITED_AT', nullable: true, comment: '방문 시간' })
-  visited_at: Date;
+  visitedAt: Date;
 
   @Column({
     name: 'PROVIDER',
@@ -73,7 +73,7 @@ export class User {
     nullable: true,
     comment: 'refresh token',
   })
-  refresh_token: string;
+  refreshToken: string;
 
   @Column({
     name: 'Profile',
@@ -87,16 +87,16 @@ export class User {
   portfolio: Portfolio;
 
   updateVisitedAt() {
-    this.visited_at = new Date();
+    this.visitedAt = new Date();
   }
 
   updateRefreshToken(refreshToken: string) {
-    this.refresh_token = refreshToken;
+    this.refreshToken = refreshToken;
     this.updateVisitedAt();
   }
 
   toResponseObject() {
-    const { refresh_token, ...data } = this;
+    const { refreshToken, ...data } = this;
     return data;
   }
 }

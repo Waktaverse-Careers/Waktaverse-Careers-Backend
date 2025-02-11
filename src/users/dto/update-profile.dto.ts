@@ -9,15 +9,6 @@ export interface ProfileData {
 
 export class UpdateProfileDto {
   @ApiProperty({
-    example: 146,
-    description: '계정 교유 id',
-    required: true,
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
-
-  @ApiProperty({
     example: {
       description: '나에대한 설명을 적는곳',
       contacts: ['discord:iq_eq', 'youtube:https://...'],
