@@ -7,9 +7,16 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Portfolio } from './portfolio.entity';
 import { Tag } from './tag.entity';
+
+export type portfolioStatusType =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'review';
 
 @Entity('portfolio_version')
 export class PortfolioVersion {
@@ -17,7 +24,7 @@ export class PortfolioVersion {
   id: number;
 
   @ManyToOne(() => Portfolio, { eager: true })
-  @JoinColumn({ name: 'portfolio_id' })
+  @JoinColumn({ name: 'PORTFOLIO_ID' })
   portfolio: Portfolio;
 
   @Column({ name: 'PORTFOLIO_NAME', length: 100 })
@@ -31,39 +38,39 @@ export class PortfolioVersion {
   description: string;
 
   @Column({
-    name: 'VERSION_NUMBER',
-    type: 'int',
-    comment: '버전 번호',
-  })
-  versionNumber: number;
-
-  @Column({
     name: 'STATUS',
     type: 'enum',
-    enum: ['pending', 'published'],
+    enum: ['pending', 'approved', 'rejected', 'review'],
     comment: '검토 상태',
     default: 'pending',
   })
-  status: 'pending' | 'published';
+  status: portfolioStatusType;
 
   @Column({
     name: 'IS_CURRENT',
     type: 'boolean',
-    default: true,
+    default: false,
     comment: '현재 활성화된 버전 여부',
   })
   isCurrent: boolean;
 
   @Column({
     name: 'CONTENT',
-    type: 'jsonb',
+    type: 'json',
     comment: '포트폴리오 전체 내용 스냅샷',
   })
-  content: any;
+  content: JSON;
+
+  @Column({
+    name: 'THUMNAIL_ID',
+    type: 'text',
+    nullable: true,
+    comment: '썸네일 id',
+  })
+  thumbnailId?: string;
 
   @ManyToMany(() => Tag, (tag) => tag.versions, {
-    eager: false,
-    cascade: true,
+    eager: true,
   })
   @JoinTable({
     name: 'portfolio_version_tag',
@@ -80,4 +87,7 @@ export class PortfolioVersion {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
