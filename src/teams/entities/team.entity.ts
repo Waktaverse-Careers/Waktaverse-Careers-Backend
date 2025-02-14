@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 export interface PeopleData {
   name: string;
@@ -64,8 +65,11 @@ export class Team {
   date: string;
 
   @Column({ name: 'REVIEW_URL', type: 'text', comment: 'team 후기 url' })
-  review_url: string;
+  reviewUrl: string;
 
   @Column({ name: 'REFERENCE_URL', type: 'text', comment: 'team 참조 url' })
-  reference_url: string;
+  referenceUrl: string;
+
+  @ManyToMany(() => User, (user) => user.teams, { eager: false })
+  users: User[];
 }
