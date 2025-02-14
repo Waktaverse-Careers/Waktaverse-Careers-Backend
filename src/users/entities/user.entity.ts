@@ -28,10 +28,11 @@ export class User {
 
   @Column({
     name: 'USER_EXTRANAME',
+    type: 'simple-array',
     nullable: true,
     comment: '추가 닉네임',
   })
-  extraName: string;
+  extraName: string[];
 
   @Column({
     name: 'PROFILE_IMG',
@@ -76,7 +77,7 @@ export class User {
   refreshToken: string;
 
   @Column({
-    name: 'Profile',
+    name: 'PROFILE',
     type: 'json',
     nullable: true,
     comment: 'Profile Info',

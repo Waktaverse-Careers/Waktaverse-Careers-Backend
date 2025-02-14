@@ -65,9 +65,17 @@ export class AuthController {
       '유효한 리프레시 토큰을 사용해 새로운 액세스 토큰을 발급받습니다.',
   })
   @ApiBody({ schema: { example: { refreshToken: 'your-refresh-token' } } })
-  @ApiResponse({ status: 200, description: '새로운 액세스 토큰 반환' })
+  @ApiResponse({
+    status: 201,
+    description: '새로운 액세스 토큰 반환',
+    example: {
+      status: 201,
+      data: { accessToken: 'ex....', refreshToken: 'ex.....' },
+      message: '새로운 토큰이 발행 되었습니다.',
+    },
+  })
   @Post('refresh')
-  async refresh(@Body() body: { refreshToken: string }) {
-    return this.authService.refresh(body.refreshToken);
+  async refresh(@Body('refreshToken') token: string) {
+    return this.authService.refresh(token);
   }
 }

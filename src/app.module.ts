@@ -10,10 +10,20 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { TeamsModule } from './teams/teams.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { R2Module } from './r2/r2.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
