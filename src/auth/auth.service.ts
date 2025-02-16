@@ -86,8 +86,8 @@ export class AuthService {
 
   async updateRefresh(id: number, refreshToken: string) {
     await this.userRepo.update(id, {
-      refresh_token: refreshToken,
-      visited_at: new Date(),
+      refreshToken: refreshToken,
+      visitedAt: new Date(),
     });
   }
 
@@ -102,11 +102,11 @@ export class AuthService {
         select: {
           id: true,
           userId: true,
-          refresh_token: true,
+          refreshToken: true,
         },
       });
 
-      if (!user || user.refresh_token !== refreshToken) {
+      if (!user || user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 

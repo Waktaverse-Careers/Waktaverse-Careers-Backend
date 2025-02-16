@@ -11,6 +11,10 @@ export class UserRepository {
   ) {}
 
   async findById(id: number, option?: any): Promise<User | undefined> {
+    if (id === undefined) {
+      this.logger.error(`Invalid id: ${id}`);
+      throw new Error('Invalid id provided');
+    }
     this.logger.log(`findById called with id: ${id}`);
     try {
       const user = await this.repo.findOne({ where: { id }, ...option });
@@ -23,6 +27,10 @@ export class UserRepository {
   }
 
   async findByUserId(userId: string, option?: any): Promise<User | undefined> {
+    if (userId === undefined) {
+      this.logger.error(`Invalid id: ${userId}`);
+      throw new Error('Invalid id provided');
+    }
     this.logger.log(`findByUserId called with userId: ${userId}`);
     try {
       const user = await this.repo.findOne({ where: { userId }, ...option });
@@ -37,7 +45,9 @@ export class UserRepository {
   async createUser(userData: Partial<User>): Promise<User> {
     this.logger.log(`createUser called with data: ${JSON.stringify(userData)}`);
     try {
-      const savedUser = await this.repo.save(this.repo.create(userData));
+      const user = this.repo.create(userData);
+      user.updateVisitedAt();
+      const savedUser = await this.repo.save(user);
       this.logger.log(`createUser result: ${savedUser}`);
       return savedUser;
     } catch (error) {

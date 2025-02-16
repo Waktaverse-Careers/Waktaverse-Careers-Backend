@@ -23,6 +23,7 @@ async function bootstrap() {
     .setDescription('The API description')
     .setVersion('1.0')
     .addTag('Waktaverse-Carrers')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
