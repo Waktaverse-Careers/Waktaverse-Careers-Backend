@@ -1,8 +1,9 @@
-import { IsString, IsArray, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsArray, IsOptional, IsEnum, IsJSON } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PortfolioVisibility } from '../entities/portfolio.entity';
+import { CreatePortfolioVersionDto } from './create-portfoilo-version.dto';
 
-export class CreatePortfolioDto {
+export class CreatePortfolioDto extends CreatePortfolioVersionDto {
   @ApiProperty({ description: '포트폴리오 이름', example: '왁타버스 포폴' })
   @IsString()
   portfolioName: string;
@@ -15,16 +16,6 @@ export class CreatePortfolioDto {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @ApiProperty({
-    description: '포트폴리오와 연관된 태그',
-    example: ['개발자', '백엔드'],
-    required: false,
-  })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  tags?: string[];
 
   @ApiProperty({
     description: '포트폴리오 썸네일 이미지 ID',
@@ -43,5 +34,19 @@ export class CreatePortfolioDto {
   })
   @IsOptional()
   @IsEnum(['public', 'partial', 'private'])
-  visibility?: PortfolioVisibility = 'public';
+  visibility?: PortfolioVisibility = 'private';
+
+  @ApiProperty({
+    description: '포트폴리오 JSON data',
+    type: 'json',
+    required: true,
+  })
+  @IsJSON()
+  content: JSON;
+
+  @ApiProperty({
+    description: '포트폴리오 태그',
+    default: [],
+  })
+  tags: string[] = [];
 }

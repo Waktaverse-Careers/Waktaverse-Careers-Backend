@@ -4,18 +4,13 @@ import { AuthController } from './auth.controller';
 import { NaverStrategy } from './naver.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { JwtModule } from '@nestjs/jwt';
 import { GoogleStrategy } from './google.strategy';
+import { JwtAuthGuard } from './auth-jwt.guard';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1h' },
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [AuthController],
-  providers: [AuthService, NaverStrategy, GoogleStrategy],
+  providers: [AuthService, NaverStrategy, GoogleStrategy, JwtAuthGuard],
+  exports: [JwtAuthGuard],
 })
 export class AuthModule {}

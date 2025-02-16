@@ -6,52 +6,41 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  ManyToMany,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Tag } from './tag.entity';
+import { PortfolioVersion } from './portfolio-version.entity';
 
 export type PortfolioVisibility = 'public' | 'partial' | 'private';
 
-@Entity('portfolios')
+@Entity('portfolio')
 export class Portfolio {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.portfolios, { eager: true })
+  @ManyToOne(() => User, (user) => user.portfolio)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ name: 'PORTFOLIO_NAME', length: 100, comment: '포트폴리오 이름' })
-  portfolioName: string;
-
   @Column({
-    name: 'DESCRIPTION',
-    type: 'text',
-    nullable: true,
-    comment: '설명',
+    name: 'CURRENT_VERSION_ID',
+    type: 'int',
+    nullable: false,
+    comment: '현재 게시된 버전 번호',
   })
-  description: string;
-
-  @ManyToMany(() => Tag, (tag) => tag.portfolio)
-  tags: Tag[];
+  currentVersion: number;
 
   @Column({
     name: 'VISIBILITY',
     type: 'enum',
     enum: ['public', 'partial', 'private'],
-    default: 'public',
+    default: 'private',
     comment: '공개 상태',
   })
   visibility: PortfolioVisibility;
 
-  @Column({
-    name: 'THUMBNAIL_ID',
-    type: 'text',
-    nullable: true,
-    comment: '포폴 썸네일 이미지 ID',
-  })
-  thumbnailId: string;
+  @OneToMany(() => PortfolioVersion, (version) => version.portfolio)
+  versions: PortfolioVersion[];
 
   @CreateDateColumn()
   createdAt: Date;

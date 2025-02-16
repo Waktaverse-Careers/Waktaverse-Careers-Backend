@@ -49,6 +49,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, any> {
         return of({
           status: statusCode,
           message: message,
+          error: error.response,
         });
       }),
     );

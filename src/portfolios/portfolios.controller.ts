@@ -49,7 +49,7 @@ export class PortfoliosController {
     @Body() updatePortfolioDto: UpdatePortfolioDto,
     @CurrentUser() user: User,
   ) {
-    return this.portfolioService.updatePortfolio(id, updatePortfolioDto, user);
+    return this.portfolioService.updatePortfolio(id, updatePortfolioDto);
   }
 
   @Delete(':id')

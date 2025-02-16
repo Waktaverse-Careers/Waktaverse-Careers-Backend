@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { ProfileData } from '../dto/update-profile.dto';
-import { Portfolio } from '../../portfolios/entities/portfolio.entity';
+import { Portfolio } from 'src/portfolios/entities/portfolio.entity';
+import { Team } from 'src/teams/entities/team.entity';
 
 export type UserRoleType = 'admin' | 'actice' | 'unactive' | 'ban' | 'delete';
 
@@ -28,10 +31,11 @@ export class User {
 
   @Column({
     name: 'USER_EXTRANAME',
+    type: 'simple-array',
     nullable: true,
     comment: '추가 닉네임',
   })
-  extra_name: string;
+  extraName: string[];
 
   @Column({
     name: 'PROFILE_IMG',
@@ -39,16 +43,16 @@ export class User {
     comment: '프로필 이미지 url',
     type: 'text',
   })
-  profile_img: string;
+  profileImg: string;
 
   @CreateDateColumn({ name: 'CREATED_AT', comment: '생성 시간' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'UPDATED_AT', comment: '수정 시간' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ name: 'VISITED_AT', nullable: true, comment: '방문 시간' })
-  visited_at: Date;
+  visitedAt: Date;
 
   @Column({
     name: 'PROVIDER',
@@ -73,10 +77,10 @@ export class User {
     nullable: true,
     comment: 'refresh token',
   })
-  refresh_token: string;
+  refreshToken: string;
 
   @Column({
-    name: 'Profile',
+    name: 'PROFILE',
     type: 'json',
     nullable: true,
     comment: 'Profile Info',
@@ -84,19 +88,38 @@ export class User {
   profile?: ProfileData;
 
   @OneToOne(() => Portfolio, (portfolio) => portfolio.user)
-  portfolios: Portfolio;
+  portfolio: Portfolio;
+
+  @ManyToMany(() => Team, (team) => team.users) // Team과의 다대다 관계 설정
+  @JoinTable({
+    name: 'user_teams', // 중간 테이블 이름
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'team_id', referencedColumnName: 'id' },
+  })
+  teams: Team[];
+
+  addmTeam(team: Team) {
+    if (!this.teams) {
+      this.teams = [];
+    }
+    this.teams.push(team);
+  }
+
+  removeTeam(team: Team) {
+    this.teams = this.teams.filter((t) => t.id !== team.id);
+  }
 
   updateVisitedAt() {
-    this.visited_at = new Date();
+    this.visitedAt = new Date();
   }
 
   updateRefreshToken(refreshToken: string) {
-    this.refresh_token = refreshToken;
+    this.refreshToken = refreshToken;
     this.updateVisitedAt();
   }
 
   toResponseObject() {
-    const { refresh_token, ...data } = this;
+    const { refreshToken, ...data } = this;
     return data;
   }
 }
