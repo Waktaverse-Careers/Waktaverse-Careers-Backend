@@ -47,14 +47,6 @@ export class PortfolioVersion {
   status: portfolioStatusType;
 
   @Column({
-    name: 'IS_CURRENT',
-    type: 'boolean',
-    default: false,
-    comment: '현재 활성화된 버전 여부',
-  })
-  isCurrent: boolean;
-
-  @Column({
     name: 'CONTENT',
     type: 'json',
     comment: '포트폴리오 전체 내용 스냅샷',
