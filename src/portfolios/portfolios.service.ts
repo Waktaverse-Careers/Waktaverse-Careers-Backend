@@ -178,6 +178,9 @@ export class PortfoliosService {
     if (!portfolio) {
       throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
     }
+    if (!portfolio) {
+      throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
+    }
 
     // 포트폴리오와 현재 버전 정보 합치기
     return {
