@@ -50,7 +50,7 @@ export class PortfoliosController {
   @Put('version')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: '새 포트폴리오 버전 생성' })
+  @ApiOperation({ summary: '포트폴리오 버전 수정' })
   @ApiBody({ type: UpdatePortfolioVersionDto })
   updatePortfolioVersion(
     @Body() dto: UpdatePortfolioVersionDto,
@@ -76,15 +76,19 @@ export class PortfoliosController {
     @Body() updatePortfolioDto: UpdatePortfolioDto,
     @CurrentUser() user: User,
   ) {
-    console.log(updatePortfolioDto);
     return this.portfolioService.updatePortfolio(user.id, updatePortfolioDto);
   }
 
-  @Delete()
-  //@UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: '자신의 포트폴리오 제거' })
-  @ApiParam({ name: 'id', description: '포트폴리오 ID', example: 1 })
-  deletePortfolio(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.portfolioService.deletePortfolio(id, user);
+  @Delete('version/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '자신의 포트폴리오 버전 삭제' })
+  @ApiParam({
+    name: 'id',
+    description: '삭제할 포트폴리오 버전 ID',
+    example: 1,
+  })
+  deletePortfolioVersion(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.portfolioService.deleteVersion(user.id, id);
   }
 }
