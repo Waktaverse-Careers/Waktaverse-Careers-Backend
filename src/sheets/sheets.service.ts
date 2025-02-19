@@ -58,8 +58,8 @@ export class SheetsService {
         date: row[5],
         slogan: row[6],
         people: data,
-        review_url: JSON.stringify(row[8].split(',')),
-        reference_url: JSON.stringify(row[9].split(',')),
+        reviewUrl: JSON.stringify(row[8].split(',')),
+        referenceUrl: JSON.stringify(row[9].split(',')),
       };
       result.push(json);
     });
