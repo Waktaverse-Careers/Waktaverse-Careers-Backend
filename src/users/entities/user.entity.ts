@@ -87,7 +87,9 @@ export class User {
   })
   profile?: ProfileData;
 
-  @OneToOne(() => Portfolio, (portfolio) => portfolio.user)
+  @OneToOne(() => Portfolio, (portfolio) => portfolio.user, {
+    cascade: true,
+  })
   portfolio: Portfolio;
 
   @ManyToMany(() => Team, (team) => team.users) // Team과의 다대다 관계 설정
