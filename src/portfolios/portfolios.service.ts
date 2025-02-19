@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Logger,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Portfolio } from './entities/portfolio.entity';
@@ -36,20 +41,12 @@ export class PortfoliosService {
       throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
     }
 
-    // 현재 활성화된 버전 정보 조회
-    const currentVersion = await this.versionRepository.findOne({
-      where: {
-        id: portfolio.currentVersion,
-      },
-    });
-
     // 포트폴리오와 현재 버전 정보 합치기
     const result = {
       ...portfolio,
-      ...currentVersion,
     } as Portfolio & PortfolioVersion;
 
-    this.logger.log('포트폴리오 조회 완료:', result);
+    this.logger.log('포트폴리오 조회 완료');
     return result;
   }
 
@@ -182,41 +179,33 @@ export class PortfoliosService {
       throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
     }
 
-    // 현재 활성화된 버전 정보 조회
-    const currentVersion = await this.versionRepository.findOne({
-      where: {
-        portfolio: { id },
-      },
-      relations: ['tags'],
-    });
-
     // 포트폴리오와 현재 버전 정보 합치기
     return {
       ...portfolio,
-      portfolioName: currentVersion.portfolioName,
-      description: currentVersion.description,
-      tags: currentVersion.tags,
-      thumbnailId: currentVersion.thumbnailId,
-      content: currentVersion.content,
     } as Portfolio;
   }
   // 버전 삭제 메서드 추가
   async deleteVersion(userId: number, versionId: number): Promise<void> {
     this.logger.log(
-      '버전 삭제 시작. 포트폴리오 ID:',
-      userId,
-      '버전 ID:',
-      versionId,
+      `버전 삭제 시작. 포트폴리오 ID:
+      ${userId} |
+      버전 ID:
+      ${versionId}`,
     );
     const version = await this.versionRepository.findOne({
       where: {
         portfolio: { user: { id: userId } },
         id: versionId,
       },
+      relations: ['portfolio'],
     });
 
     if (!version) {
       throw new NotFoundException('해당 버전을 찾을 수 없습니다.');
+    }
+
+    if (version.portfolio.currentVersion === versionId) {
+      throw new BadRequestException('현재 공개중인 버전은 삭제 불가');
     }
 
     // 버전 삭제

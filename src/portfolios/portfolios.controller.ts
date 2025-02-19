@@ -95,6 +95,7 @@ export class PortfoliosController {
     @Param('id') id: number,
     @CurrentUser() user: User,
   ) {
-    return await this.portfolioService.deleteVersion(user.id, id);
+    await this.portfolioService.deleteVersion(user.id, id);
+    return true;
   }
 }
