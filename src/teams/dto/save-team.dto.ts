@@ -79,7 +79,7 @@ export class SaveTeamDto {
   })
   @IsOptional()
   @IsString()
-  review_url?: string;
+  reviewUrl?: string;
 
   @ApiProperty({
     example: "['https://...', 'https://...']",
@@ -87,5 +87,5 @@ export class SaveTeamDto {
   })
   @IsOptional()
   @IsString()
-  reference_url?: string;
+  referenceUrl?: string;
 }

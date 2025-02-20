@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { OauthUserDto } from './dto/oauth-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Portfolio } from 'src/portfolios/entities/portfolio.entity';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +44,8 @@ export class AuthService {
   }
 
   async signUp(dto: OauthUserDto) {
-    return await this.userRepo.save(dto);
+    const user = this.userRepo.create({ ...dto, portfolio: new Portfolio() });
+    return await this.userRepo.save(user);
   }
 
   async updateLoginToken(id: number) {

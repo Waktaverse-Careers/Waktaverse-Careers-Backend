@@ -21,10 +21,11 @@ export class CreatePortfolioVersionDto {
 
   @ApiProperty({
     description: '포트폴리오 내용 데이터 ',
+    example: { data: 'data' },
     required: true,
   })
   @IsOptional()
-  content: any;
+  content: JSON;
 
   @ApiProperty({
     description: '포트폴리오 썸네일 id ',
