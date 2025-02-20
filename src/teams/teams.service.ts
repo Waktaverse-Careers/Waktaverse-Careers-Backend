@@ -19,7 +19,20 @@ export class TeamsService {
       this.logger.error('Failed to fetch sheet data');
       throw new BadRequestException('Failed to fetch sheet data');
     }
-    const teams = data.map((item) => this.teamRepo.create(item));
+
+    const teams = await Promise.all(
+      data.map(async (item) => {
+        const existingTeam = await this.teamRepo.findOne({
+          where: { id: item.id },
+        });
+        if (existingTeam) {
+          return existingTeam;
+        } else {
+          return this.teamRepo.create(item);
+        }
+      }),
+    );
+
     return await this.teamRepo.saves(teams);
   }
 
