@@ -17,7 +17,9 @@ export class UsersService {
   }
 
   async updateUser(id, dto: UpdateUserDto) {
-    await this.userRepo.updateUser(id, dto);
+    const user = await this.userRepo.findById(id);
+    Object.assign(user, dto);
+    await this.userRepo.save(user);
   }
 
   async deleteUser(id: number) {

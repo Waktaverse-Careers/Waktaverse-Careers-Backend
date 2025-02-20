@@ -100,17 +100,6 @@ export class User {
   })
   teams: Team[];
 
-  addmTeam(team: Team) {
-    if (!this.teams) {
-      this.teams = [];
-    }
-    this.teams.push(team);
-  }
-
-  removeTeam(team: Team) {
-    this.teams = this.teams.filter((t) => t.id !== team.id);
-  }
-
   updateVisitedAt() {
     this.visitedAt = new Date();
   }
