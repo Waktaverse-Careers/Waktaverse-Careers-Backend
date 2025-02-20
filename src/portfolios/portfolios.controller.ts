@@ -21,7 +21,10 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreatePortfolioVersionDto } from './dto/create-portfoilo-version.dto';
-import { UpdatePortfolioVersionDto } from './dto/update-portfolio-version.dto';
+import {
+  UpdatePortfolioVersionDto,
+  UpdateStatusVersionDto,
+} from './dto/update-portfolio-version.dto';
 
 @ApiTags('Portfolios')
 @Controller('portfolios')
@@ -59,12 +62,26 @@ export class PortfoliosController {
     return await this.portfolioService.updateVersion(user.id, dto);
   }
 
+  @Get('shared/:sharedId')
+  @ApiOperation({ summary: 'Shared ID로 포트폴리오 불러오기' })
+  @ApiParam({
+    name: 'sharedId',
+    description: '포트폴리오의 일부 공개 ID',
+    example: 1,
+  })
+  async getPortfolioBySharedId(@Param('sharedId') sharedId: string) {
+    return await this.portfolioService.getPortfolioBySharedId(sharedId);
+  }
   // 추후 포트폴리오 공개상태에 따른 수정 진행
-  @Get(':id')
-  @ApiOperation({ summary: 'ID로 포트폴리오 불러오기' })
-  @ApiParam({ name: 'id', description: '포트폴리오 ID', example: 1 })
-  async getPortfolioById(@Param('id') id: number) {
-    return await this.portfolioService.getPortfolioById(id);
+  @Get(':userId')
+  @ApiOperation({ summary: 'user ID로 포트폴리오 불러오기' })
+  @ApiParam({
+    name: 'userId',
+    description: '포트폴리오 주인의 User ID',
+    example: 1,
+  })
+  async getPortfolio(@Param('userId') id: number) {
+    return await this.portfolioService.getPortfolio(id);
   }
 
   @Put()
@@ -80,6 +97,17 @@ export class PortfoliosController {
       user.id,
       updatePortfolioDto,
     );
+  }
+
+  @Put('version/status')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '자신의 포트폴리오 버전 상태 수정' })
+  async updateStatusVersion(
+    @Body() dto: UpdateStatusVersionDto,
+    @CurrentUser() user,
+  ) {
+    return await this.portfolioService.updateStatusVersion(user.id, dto);
   }
 
   @Delete('version/:id')

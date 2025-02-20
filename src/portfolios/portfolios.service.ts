@@ -3,6 +3,7 @@ import {
   NotFoundException,
   Logger,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -51,23 +52,22 @@ export class PortfoliosService {
   }
 
   async updatePortfolio(userId: number, dto: UpdatePortfolioDto) {
-    const portfoilo = await this.portfolioRepository.findOne({
+    const portfolio = await this.portfolioRepository.findOne({
       where: { user: { id: userId } },
     });
 
-    if (!portfoilo) {
+    if (!portfolio) {
       this.logger.warn('포트폴리오를 찾을 수 없습니다. 사용자 ID:', userId);
       throw new NotFoundException('Portfolio is Not Found');
     }
 
-    await this.portfolioRepository.update(portfoilo.id, dto);
+    portfolio.updateMeta(dto);
 
-    const updatedPortfolio = await this.portfolioRepository.findOne({
-      where: { user: { id: userId } },
-    });
+    console.log(portfolio);
+    await this.portfolioRepository.save(portfolio);
 
-    this.logger.log('포트폴리오 업데이트 완료:', updatedPortfolio);
-    return updatedPortfolio;
+    this.logger.log('포트폴리오 업데이트 완료:', portfolio);
+    return portfolio;
   }
 
   private async handleTags(tagNames: string[]) {
@@ -147,46 +147,60 @@ export class PortfoliosService {
     return version;
   }
 
-  async updateStatusVersion(dto: UpdateStatusVersionDto) {
+  async updateStatusVersion(userId: number, dto: UpdateStatusVersionDto) {
     this.logger.log('버전 status 업데이트 시작');
+
+    const { id, status } = dto;
     const version = await this.versionRepository.findOne({
       where: {
-        id: dto.id, // dto에서 versionId를 가져옴
+        portfolio: { user: { id: userId } },
+        id: id, // dto에서 versionId를 가져옴
       },
     });
 
     if (!version) {
-      this.logger.warn(`versionId : ${dto.id} 가 존재하지 않음`);
+      this.logger.warn(`versionId : ${id} 가 존재하지 않음`);
       throw new NotFoundException('해당 버전을 찾을 수 없습니다.');
     }
 
-    await this.versionRepository.update(version.id, { ...dto });
+    version.status = status;
+    await this.versionRepository.save(version);
 
-    const updatedVersion = await this.versionRepository.findOne({
-      where: { id: version.id },
-    });
-    this.logger.log('버전 status 업데이트 완료:', updatedVersion);
-    return updatedVersion;
+    this.logger.log('버전 status 업데이트 완료:', version);
+    return version;
   }
 
-  async getPortfolioById(id: number): Promise<Portfolio> {
+  async getPortfolio(userId: number): Promise<Portfolio> {
+    const portfolio = await this.getPortfolioByUserId(userId);
+
+    if (portfolio.visibility !== 'public') {
+      throw new UnauthorizedException('공개된 포트폴리오가 아닙니다.');
+    }
+
+    return portfolio;
+  }
+
+  async getPortfolioBySharedId(sharedId: string) {
     const portfolio = await this.portfolioRepository.findOne({
-      where: { id },
+      where: { sharedId: sharedId },
       relations: ['user'],
     });
 
     if (!portfolio) {
       throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
     }
-    if (!portfolio) {
-      throw new NotFoundException('포트폴리오를 찾을 수 없습니다.');
+
+    if (portfolio.visibility === 'private') {
+      throw new UnauthorizedException(
+        '해당 포트폴리오에 대한 접근이 막혀있습니다.',
+      );
     }
 
-    // 포트폴리오와 현재 버전 정보 합치기
     return {
       ...portfolio,
     } as Portfolio;
   }
+
   // 버전 삭제 메서드 추가
   async deleteVersion(userId: number, versionId: number): Promise<void> {
     this.logger.log(

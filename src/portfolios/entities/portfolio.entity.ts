@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { PortfolioVersion } from './portfolio-version.entity';
+import { randomUUID } from 'crypto';
+import { UpdatePortfolioDto } from '../dto/update-portfolio.dto';
 
 export type PortfolioVisibility = 'public' | 'partial' | 'private';
 
@@ -40,6 +42,14 @@ export class Portfolio {
   })
   visibility: PortfolioVisibility = 'private';
 
+  @Column({
+    name: 'SHARED_ID',
+    type: 'text',
+    default: null,
+    nullable: true,
+  })
+  sharedId?: string;
+
   @OneToMany(() => PortfolioVersion, (version) => version.portfolio)
   versions: PortfolioVersion[];
 
@@ -48,4 +58,16 @@ export class Portfolio {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  private changeVisibility(visibility: PortfolioVisibility) {
+    if (visibility === 'private') this.sharedId = null;
+    else this.sharedId = randomUUID();
+    this.visibility = visibility;
+  }
+
+  updateMeta(dto: UpdatePortfolioDto) {
+    const { visibility, currentVersion } = dto;
+    if (currentVersion) this.currentVersion = currentVersion;
+    if (visibility) this.changeVisibility(visibility);
+  }
 }

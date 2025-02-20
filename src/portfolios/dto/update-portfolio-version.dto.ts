@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { portfolioStatusType } from '../entities/portfolio-version.entity';
 import { CreatePortfolioVersionDto } from './create-portfoilo-version.dto';
-import { IsIn, IsNumber } from 'class-validator';
+import { IsNumber, IsEnum } from 'class-validator';
 
 export class UpdatePortfolioVersionDto extends PartialType(
   CreatePortfolioVersionDto,
@@ -15,6 +15,13 @@ export class UpdatePortfolioVersionDto extends PartialType(
   id: number;
 }
 
+export enum PortfolioStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  REVIEW = 'review',
+}
+
 export class UpdateStatusVersionDto {
   @ApiProperty({
     description: 'Version Id',
@@ -26,9 +33,9 @@ export class UpdateStatusVersionDto {
 
   @ApiProperty({
     description: '포트폴리오 상태',
-    example: ['pending', 'approved', 'rejected', 'review'],
+    example: 'pending',
     required: true,
   })
-  @IsIn(['pending', 'approved', 'rejected', 'review'])
+  @IsEnum(['pending', 'approved', 'rejected', 'review'])
   status: portfolioStatusType;
 }
